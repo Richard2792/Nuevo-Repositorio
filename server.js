@@ -4,19 +4,17 @@ const axios = require("axios");
 const app = express();
 app.use(express.json());
 
-const DISCORD_WEBHOOK = "https://discord.com/api/webhooks/WEBHOOK_ID/WEBHOOK_TOKEN"; // 🔹 Cambia esto por tu Webhook de Discord
-
 app.post("/sendToDiscord", async (req, res) => {
-    const { content, username, avatar_url } = req.body;
+    const { webhook_url, content, username, avatar_url } = req.body;
 
-    if (!content) {
-        return res.status(400).json({ error: "El contenido del mensaje es obligatorio" });
+    if (!webhook_url || !content) {
+        return res.status(400).json({ error: "El webhook y el contenido son obligatorios." });
     }
 
     try {
-        await axios.post(DISCORD_WEBHOOK, {
+        await axios.post(webhook_url, {
             content,
-            username: username || "Render Proxy",
+            username: username || "Roblox API",
             avatar_url: avatar_url || ""
         });
 
@@ -27,4 +25,4 @@ app.post("/sendToDiscord", async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`✅ Proxy corriendo en el puerto ${PORT}`));
+app.listen(PORT, () => console.log(`✅ API corriendo en el puerto ${PORT}`));
